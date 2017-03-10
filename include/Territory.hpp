@@ -32,7 +32,7 @@ struct Territory {
 		int id;
 		int x,y;
 		std::string name;
-		vector<int> neighbors;
+		std::vector<int> neighbors;
 	}GameData;
 
 	struct {

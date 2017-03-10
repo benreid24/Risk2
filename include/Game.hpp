@@ -4,13 +4,14 @@
 #include "Territory.hpp"
 #include "Cards.hpp"
 #include "Player.hpp"
+#include "Map.hpp"
 
 class Game {
 	std::vector<TerritoryCard> territoryCardDeck;
 	std::vector<WildCard> wildCardDeck;
 	std::vector<Player> players;
 
-	//map data?
+	Map rMap;
 
 public:
 	/**
@@ -21,12 +22,30 @@ public:
 	Game(std::string gameFile);
 
 	/**
-	 * Function for the menu of adding players
+	 * Overall game loop that allows multiple games to played. Exit the program when it returns
 	 */
-	void lobby();
+	void start();
+
+	/**
+	 * Function for the menu of adding players
+	 *
+	 * \return True if the program should exit, false otherwise
+	 */
+	bool lobby();
 
 	/**
 	 * Function for initial territory assignment
+	 *
+	 * \return True if the program should exit, false otherwise
+	 */
+	bool gameStart();
+
+	/**
+	 * Function for main game play
+	 *
+	 * \return True if the program should exit, false otherwise
+	 */
+	bool mainGame();
 };
 
 #endif // GAME_HPP
