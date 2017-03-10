@@ -1,0 +1,17 @@
+<Risk2>
+	<Map>
+		<Image>Resources/images/map.png</Image>
+		<Data>Resources/data/map.csv</Data>
+	</Map>
+	<Audio>
+		<Lobby>Resources/audio/lobby.ogv</Lobby>
+		<TerritoryPick>Resources/audio/tpick.ogv</TerritoryPick>
+		<Main>Resources/audio/game.ogv</Main>
+		<Attacking>Resources/audio/attack.ogv</Attacking>
+		<Defending>Resources/audio/defend.ogv</Defending>
+		<StartTurn>Resources/audio/turnB.ogv</StartTurn>
+		<EndTurn>Resources/audio/turnE.ogv</EndTurn>
+		<PlayerOut>Resources/audio/playerOut.ogv</PlayerOut>
+		<GameWon>Resources/audio/victory.ogv</GameWon>
+	</Audio>
+</Risk2>
