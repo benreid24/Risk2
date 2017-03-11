@@ -1,7 +1,8 @@
 <Risk2>
 	<Map>
 		<Image>Resources/images/map.png</Image>
-		<Data>Resources/data/map.csv</Data>
+		<TerritoryFile>Resources/data/territories.csv</TerritoryFile>
+		<ContinentFile>Resources/data/continents.csv</ContinentFile>
 	</Map>
 	<Audio>
 		<Lobby>Resources/audio/lobby.ogv</Lobby>

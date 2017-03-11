@@ -1,0 +1,7 @@
+Id,Name,Troop Bonus,Moral Bonus,Moral Hurt
+1,North America,5,30,10
+2,South America,2,10,30
+3,Africa,3,20,20
+4,Europe,5,50,20
+5,Asia,7,80,10
+6,Australia,2,5,40

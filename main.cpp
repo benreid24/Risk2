@@ -11,5 +11,10 @@ int main() {
         cout << i->first << " -> " << i->second << endl;
 	}
 
+	vector<Territory> ters;
+	vector<Continent> cons;
+	loadTerritoryCSV(ters,t["Risk2.Map.TerritoryFile"]);
+	loadContinentCSV(cons,t["Risk2.Map.ContinentFile"]);
+
 	return 0;
 }

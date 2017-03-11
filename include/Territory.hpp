@@ -30,6 +30,7 @@ enum LaborType {
 struct Territory {
 	struct {
 		int id;
+		int continentId;
 		int x,y;
 		std::string name;
 		std::vector<int> neighbors;
@@ -46,6 +47,15 @@ struct Territory {
 		int baseCropProduction;
 		int baseIndustrialProduction;
 	}ConstData;
+};
+
+/**
+ * Structure that contains all data related to a single continent
+ */
+struct Continent {
+	std::string name;
+	int id;
+	int moralBoost, moralDamage;
 };
 
 #endif // TERRITORY_HPP
