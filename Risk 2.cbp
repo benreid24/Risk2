@@ -55,10 +55,12 @@
 		<Unit filename="include/Map.hpp" />
 		<Unit filename="include/Player.hpp" />
 		<Unit filename="include/Territory.hpp" />
+		<Unit filename="include/TerritoryTree.hpp" />
 		<Unit filename="include/Util.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/Game.cpp" />
 		<Unit filename="src/Map.cpp" />
+		<Unit filename="src/TerritoryTree.cpp" />
 		<Unit filename="src/Util.cpp" />
 		<Extensions>
 			<code_completion />

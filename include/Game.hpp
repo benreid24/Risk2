@@ -7,6 +7,8 @@
 #include "Map.hpp"
 
 class Game {
+	std::map<int,Territory> territories;
+	std::map<int,Continent> continents;
 	std::vector<TerritoryCard> territoryCardDeck;
 	std::vector<WildCard> wildCardDeck;
 	std::vector<Player> players;

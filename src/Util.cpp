@@ -134,6 +134,7 @@ void loadTerritoryCSV(vector<Territory>& territoryVec, string file) {
 		ter.ConstData.baseIndustrialProduction = stringToInt(temp);
 
 		//neighbors
+        ter.GameData.neighbors.clear();
 		for (int i = 0; i<5; ++i) {
 			getline(input,temp,',');
 			if (temp.size()==0)

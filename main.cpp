@@ -16,5 +16,9 @@ int main() {
 	loadTerritoryCSV(ters,t["Risk2.Map.TerritoryFile"]);
 	loadContinentCSV(cons,t["Risk2.Map.ContinentFile"]);
 
+	for (unsigned int i = 0; i<ters.size(); ++i) {
+		cout << "Territory: Id(" << ters[i].GameData.id << "), Name(" << ters[i].GameData.name << "), Continent(" << ters[i].GameData.continentId <<"), NumNeighbors(" << ters[i].GameData.neighbors.size() << ")\n";
+	}
+
 	return 0;
 }
