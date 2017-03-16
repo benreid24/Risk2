@@ -15,4 +15,7 @@
 		<PlayerOut>Resources/audio/playerOut.ogv</PlayerOut>
 		<GameWon>Resources/audio/victory.ogv</GameWon>
 	</Audio>
+	<Media>
+		<Font>Resources/font.ttf</Font>
+	</Media>
 </Risk2>

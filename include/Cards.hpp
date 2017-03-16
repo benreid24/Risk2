@@ -7,9 +7,9 @@
 struct TerritoryCard {
 	int id;
 	enum Type {
-		A,
-		B,
-		C
+		A = 0,
+		B = 1,
+		C = 2
 	}type;
 };
 

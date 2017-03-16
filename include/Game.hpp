@@ -2,18 +2,21 @@
 #define GAME_HPP
 
 #include "Territory.hpp"
+#include "TerritoryTree.hpp"
 #include "Cards.hpp"
 #include "Player.hpp"
 #include "Map.hpp"
 
 class Game {
+	TerritoryTree tTree;
 	std::map<int,Territory> territories;
 	std::map<int,Continent> continents;
 	std::vector<TerritoryCard> territoryCardDeck;
 	std::vector<WildCard> wildCardDeck;
 	std::vector<Player> players;
 
-	Map rMap;
+	Map* rMap;
+	sf::Font font;
 
 public:
 	/**

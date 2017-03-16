@@ -8,12 +8,12 @@
  * Basic enumeration to easily identify factions
  */
 enum Faction {
-	Red,
-	Green,
-	Blue,
-	Yellow,
-	White,
-	Orange
+	Red = 0,
+	Green = 1,
+	Blue = 2,
+	Yellow = 3,
+	White = 4,
+	Orange = 5
 };
 
 /**
@@ -56,6 +56,7 @@ struct Continent {
 	std::string name;
 	int id;
 	int moralBoost, moralDamage;
+	std::vector<int> territories;
 };
 
 #endif // TERRITORY_HPP

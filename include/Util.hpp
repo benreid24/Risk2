@@ -39,4 +39,12 @@ extern void loadContinentCSV(std::vector<Continent>& conVec, std::string file);
  */
 int stringToInt(std::string str);
 
+/**
+ * Helper function to convert an integer to a string
+ *
+ * \param i The integer to convert to a string
+ * \return A string that contains the integer
+ */
+std::string intToString(int i);
+
 #endif // UTIL_HPP

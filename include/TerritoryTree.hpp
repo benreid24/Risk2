@@ -5,18 +5,20 @@
 #include <map>
 
 /**
- * Helper class to encapsulate territory traversal
+ * Helper class to encapsulate territory traversal and continent ownership
  */
 class TerritoryTree {
 	std::map<int,Territory>* territories;
+	std::map<int,Continent>* continents;
 
 public:
 	/**
 	 * Builds the internal tree structure from the territories in the map
 	 *
 	 * \param ters A map containing all of the territories
+	 * \param conts A map containing all of the continents
 	 */
-	TerritoryTree(std::map<int,Territory>* ters);
+	TerritoryTree(std::map<int,Territory>* ters, std::map<int,Continent>* conts);
 
 	/**
 	 * Tells whether or not two territories are adjacent
@@ -35,6 +37,14 @@ public:
 	 * \return True if a path exists, false otherwise
 	 */
 	bool pathExists(int start, int dest);
+
+	/**
+	 * Returns a list of continents owned by the given Faction
+	 *
+	 * \param f The Faction to check for
+	 * \return A vector of continent ids they own
+	 */
+	std::vector<int> getControlledContinents(Faction f);
 };
 
 #endif // TERRITORYTREE_HPP

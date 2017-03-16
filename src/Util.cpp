@@ -13,6 +13,12 @@ int stringToInt(string str) {
 	return i;
 }
 
+string intToString(int i) {
+	stringstream ss;
+	ss << i;
+	return ss.str();
+}
+
 map<string,string> loadXML(string file) {
 	ifstream input(file.c_str());
 	map<string,string> ret;

@@ -8,18 +8,22 @@
  * View class for rendering the map and all of the armies on it
  */
 class Map {
+	sf::RenderTexture target;
+	sf::Sprite rendSpr;
 	sf::Texture mapTxtr;
 	sf::Sprite mapImg;
 	sf::CircleShape armyCircle;
 	sf::Text armyText;
+	sf::Color colorMap[6];
 
 public:
 	/**
 	 * Primary constructor. Initializes internal data and loads map image
 	 *
 	 * \param img The file of the map image to load
+	 * \param font A reference to a Font object to use
 	 */
-    Map(std::string img);
+    Map(std::string img, sf::Font& font);
 
     /**
      * Renders the map and territory data to the given window

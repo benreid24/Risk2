@@ -1,8 +1,9 @@
 #include "TerritoryTree.hpp"
 using namespace std;
 
-TerritoryTree::TerritoryTree(map<int, Territory>* ters) {
+TerritoryTree::TerritoryTree(map<int, Territory>* ters, map<int,Continent>* conts) {
 	territories = ters;
+	continents = conts;
 }
 
 bool TerritoryTree::isNeighbor(int t1, int t2) {
