@@ -13,7 +13,8 @@ enum Faction {
 	Blue = 2,
 	Yellow = 3,
 	White = 4,
-	Orange = 5
+	Orange = 5,
+	Neutral = 6
 };
 
 /**
@@ -47,6 +48,12 @@ struct Territory {
 		int baseCropProduction;
 		int baseIndustrialProduction;
 	}ConstData;
+
+	Territory() {
+		GameData.id = GameData.x = GameData.y = GameData.continentId = OwnerData.armies = OwnerData.turnsSinceLastRevolt = ConstData.baseCropProduction = ConstData.baseIndustrialProduction = 0;
+		OwnerData.owner = Faction::Neutral;
+		OwnerData.labor = LaborType::Paid;
+	}
 };
 
 /**

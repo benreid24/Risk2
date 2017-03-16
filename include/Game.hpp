@@ -9,6 +9,7 @@
 
 class Game {
 	TerritoryTree tTree;
+	std::vector<Territory> territoriesVec;
 	std::map<int,Territory> territories;
 	std::map<int,Continent> continents;
 	std::vector<TerritoryCard> territoryCardDeck;
@@ -17,6 +18,9 @@ class Game {
 
 	Map* rMap;
 	sf::Font font;
+
+	sf::RenderWindow window;
+	//more GUI stuff
 
 public:
 	/**

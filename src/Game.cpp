@@ -5,17 +5,16 @@ using namespace sf;
 
 Game::Game(std::string gameFile) : tTree(&territories,&continents) {
 	map<string,string> cfg = loadXML(gameFile);
-	vector<Territory> ters;
 	vector<Continent> conts;
 
-	loadTerritoryCSV(ters,cfg["Risk2.Map.TerritoryFile"]);
+	loadTerritoryCSV(territoriesVec,cfg["Risk2.Map.TerritoryFile"]);
 	loadContinentCSV(conts,cfg["Risk2.Map.ContinentFile"]);
 
 	TerritoryCard tCard;
 	tCard.type = TerritoryCard::A;
-	for (unsigned int i = 0; i<ters.size(); ++i) {
-		territories[ters[i].GameData.id] = ters[i];
-		tCard.id = ters[i].GameData.id;
+	for (unsigned int i = 0; i<territoriesVec.size(); ++i) {
+		territories[territoriesVec[i].GameData.id] = territoriesVec[i];
+		tCard.id = territoriesVec[i].GameData.id;
 		territoryCardDeck.push_back(tCard);
 		tCard.type = TerritoryCard::Type(int(tCard.type)+1);
 		if (tCard.type>TerritoryCard::C)
@@ -30,6 +29,8 @@ Game::Game(std::string gameFile) : tTree(&territories,&continents) {
 	rMap = new Map(cfg["Risk2.Map.Image"],font);
 
 	//TODO  - wild cards and players
+
+	window.create(VideoMode(1600,1200,32), "Risk 2", Style::Close|Style::Titlebar|Style::Resize);
 }
 
 void Game::start() {
@@ -56,5 +57,19 @@ bool Game::gameStart() {
 
 bool Game::mainGame() {
 	//TODO - go around and do player turns
+
+	while (window.isOpen()) {
+		Event evt;
+		while (window.pollEvent(evt)) {
+			if (evt.type==Event::Closed)
+				window.close();
+		}
+
+		window.clear();
+		rMap->render(window,territoriesVec,IntRect(0,0,1600,1200));
+		window.display();
+		sleep(milliseconds(30));
+	}
+
 	return false;
 }
