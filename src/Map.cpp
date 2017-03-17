@@ -38,3 +38,21 @@ void Map::render(RenderWindow& window, vector<Territory>& territories, IntRect a
 	rendSpr.setPosition(area.left,area.top+area.height);
 	window.draw(rendSpr);
 }
+
+int Map::getClosetTerritory(vector<Territory>& territories, float x, float y) {
+	int cId = -1, cDist = 10000000;
+	int xLoc = x*mapTxtr.getSize().x;
+	int yLoc = y*mapTxtr.getSize().y;
+
+	for (unsigned int i = 0; i<territories.size(); ++i) {
+		int tx = territories[i].GameData.x;
+		int ty = territories[i].GameData.y;
+		int t = (xLoc-tx)*(xLoc-tx)+(yLoc-ty)*(yLoc-ty);
+		if (t<cDist) {
+			cDist = t;
+			cId = territories[i].GameData.id;
+		}
+	}
+
+	return cId;
+}

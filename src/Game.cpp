@@ -65,6 +65,12 @@ bool Game::mainGame() {
 				window.close();
 		}
 
+		if (Mouse::isButtonPressed(Mouse::Left)) {
+			Vector2f pos = Vector2f(Mouse::getPosition(window));
+			int id = rMap->getClosetTerritory(territoriesVec,pos.x/1600,pos.y/1200);
+			cout << territories[id].GameData.name << endl;
+		}
+
 		window.clear();
 		rMap->render(window,territoriesVec,IntRect(0,0,1600,1200));
 		window.display();
