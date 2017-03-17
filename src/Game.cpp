@@ -79,3 +79,41 @@ bool Game::mainGame() {
 
 	return false;
 }
+
+BattleResult Game::attackTerritory(int attacker, int defender) {
+	//TODO - battle
+	return BattleResult::InvalidAttack;
+}
+
+bool Game::moveArmies(int start, int dest, int amount) {
+	if (tTree.pathExists(start,dest)) { //this also ensures that both territories are the same faction
+		if (territories[start].OwnerData.armies-amount>=1) {
+			territories[start].OwnerData.armies -= amount;
+			territories[dest].OwnerData.armies += amount;
+			return true;
+		}
+	}
+	return false;
+}
+
+TerritoryCard Game::drawTerritoryCard() {
+	int i = getRandom(0,territoryCardDeck.size());
+	TerritoryCard ret = territoryCardDeck[i];
+	territoryCardDeck.erase(territoryCardDeck.begin()+i);
+	return ret;
+}
+
+WildCard Game::drawWildCard() {
+	int i = getRandom(0,wildCardDeck.size());
+	WildCard ret = wildCardDeck[i];
+	wildCardDeck.erase(wildCardDeck.begin()+i);
+	return ret;
+}
+
+void Game::returnCard(TerritoryCard t) {
+	territoryCardDeck.push_back(t);
+}
+
+void Game::placeArmies(int territory, int amount) {
+	territories[territory].OwnerData.armies += amount;
+}

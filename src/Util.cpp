@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <sstream>
+#include <cstdlib>
 using namespace std;
 
 int stringToInt(string str) {
@@ -180,4 +181,8 @@ void loadContinentCSV(vector<Continent>& conVec, string file) {
 
 		conVec.push_back(temp);
 	}
+}
+
+int getRandom(int mn, int mx) {
+	return (rand()%(mx-mn)+mn);
 }

@@ -47,4 +47,13 @@ int stringToInt(std::string str);
  */
 std::string intToString(int i);
 
+/**
+ * Generates a random number in the range [mn,mx)
+ *
+ * \param mn The lower bound of the range
+ * \param mx The upper bound of the range
+ * \return A random integer in the specified range
+ */
+int getRandom(int mn, int mx);
+
 #endif // UTIL_HPP
