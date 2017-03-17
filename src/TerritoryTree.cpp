@@ -1,9 +1,16 @@
 #include "TerritoryTree.hpp"
+#include <iostream>
 using namespace std;
 
 TerritoryTree::TerritoryTree(map<int, Territory>* ters, map<int,Continent>* conts) {
 	territories = ters;
 	continents = conts;
+}
+
+void TerritoryTree::assignContinents() {
+	for (map<int,Territory>::iterator i = territories->begin(); i!=territories->end(); ++i) {
+        continents->at(i->second.GameData.continentId).territories.push_back(i->first);
+	}
 }
 
 bool TerritoryTree::isNeighbor(int t1, int t2) {
@@ -39,4 +46,22 @@ bool TerritoryTree::pathExists(int start, int dest) {
 	}
 
 	return false; //checked all territories but no path found
+}
+
+vector<int> TerritoryTree::getControlledContinents(Faction f) {
+	vector<int> ret;
+
+	for (map<int,Continent>::iterator i = continents->begin(); i!=continents->end(); ++i) {
+		bool add = true;
+		for (unsigned int j = 0; j<i->second.territories.size(); ++j) {
+			if (territories->at(i->second.territories[j]).OwnerData.owner!=f) {
+				add = false;
+				break;
+			}
+		}
+		if (add)
+			ret.push_back(i->first);
+	}
+
+	return ret;
 }

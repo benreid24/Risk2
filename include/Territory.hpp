@@ -62,6 +62,7 @@ struct Territory {
 struct Continent {
 	std::string name;
 	int id;
+	int troopBonus;
 	int moralBoost, moralDamage;
 	std::vector<int> territories;
 };

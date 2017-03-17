@@ -169,10 +169,13 @@ void loadContinentCSV(vector<Continent>& conVec, string file) {
 		if (!input.good())
 			break;
 
+		getline(input,s,','); //troop bonus
+		temp.troopBonus = stringToInt(s);
+
 		getline(input,s,','); //moral boost
 		temp.moralBoost = stringToInt(s);
 
-		getline(input,s,','); //moral hurt
+		getline(input,s); //moral hurt
 		temp.moralDamage = stringToInt(s);
 
 		conVec.push_back(temp);

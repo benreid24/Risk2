@@ -21,6 +21,11 @@ public:
 	TerritoryTree(std::map<int,Territory>* ters, std::map<int,Continent>* conts);
 
 	/**
+	 * Assigns territories to the continents that they belong to
+	 */
+	void assignContinents();
+
+	/**
 	 * Tells whether or not two territories are adjacent
 	 *
 	 * \param t1 The first territory to check

@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include "Util.hpp"
+#include <iostream>
 using namespace std;
 using namespace sf;
 
@@ -9,7 +10,6 @@ Game::Game(std::string gameFile) : tTree(&territories,&continents) {
 
 	loadTerritoryCSV(territoriesVec,cfg["Risk2.Map.TerritoryFile"]);
 	loadContinentCSV(conts,cfg["Risk2.Map.ContinentFile"]);
-
 	TerritoryCard tCard;
 	tCard.type = TerritoryCard::A;
 	for (unsigned int i = 0; i<territoriesVec.size(); ++i) {
@@ -20,10 +20,10 @@ Game::Game(std::string gameFile) : tTree(&territories,&continents) {
 		if (tCard.type>TerritoryCard::C)
 			tCard.type = TerritoryCard::A;
 	}
-
 	for (unsigned int i = 0; i<conts.size(); ++i) {
 		continents[conts[i].id] = conts[i];
 	}
+	tTree.assignContinents();
 
 	font.loadFromFile(cfg["Risk2.Media.Font"]);
 	rMap = new Map(cfg["Risk2.Map.Image"],font);
