@@ -8,7 +8,7 @@
  * Helper class to encapsulate territory traversal and continent ownership
  */
 class TerritoryTree {
-	std::map<int,Territory>* territories;
+	std::map<int,Territory*>* territories;
 	std::map<int,Continent>* continents;
 
 public:
@@ -18,7 +18,7 @@ public:
 	 * \param ters A map containing all of the territories
 	 * \param conts A map containing all of the continents
 	 */
-	TerritoryTree(std::map<int,Territory>* ters, std::map<int,Continent>* conts);
+	TerritoryTree(std::map<int,Territory*>* ters, std::map<int,Continent>* conts);
 
 	/**
 	 * Assigns territories to the continents that they belong to

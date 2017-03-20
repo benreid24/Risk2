@@ -21,15 +21,15 @@ Map::Map(string img, Font& f) : armyCircle(13) {
 	colorMap[6] = Color(180,180,180);
 }
 
-void Map::render(RenderWindow& window, vector<Territory>& territories, IntRect area) {
+void Map::render(RenderWindow& window, vector<Territory*>& territories, IntRect area) {
 	Vector2f pos;
 	target.draw(mapImg);
 	for (unsigned int i = 0; i<territories.size(); ++i) {
-		pos = Vector2f(territories[i].GameData.x,territories[i].GameData.y);
+		pos = Vector2f(territories[i]->GameData.x,territories[i]->GameData.y);
 		armyCircle.setPosition(pos);
-		armyCircle.setFillColor(colorMap[territories[i].OwnerData.owner]);
+		armyCircle.setFillColor(colorMap[territories[i]->OwnerData.owner]);
 		target.draw(armyCircle);
-		armyText.setString(intToString(territories[i].OwnerData.armies));
+		armyText.setString(intToString(territories[i]->OwnerData.armies));
 		armyText.setPosition(pos.x+13,pos.y+12);
 		armyText.setOrigin(armyText.getGlobalBounds().width/2,armyText.getGlobalBounds().height);
 		target.draw(armyText);
@@ -39,20 +39,20 @@ void Map::render(RenderWindow& window, vector<Territory>& territories, IntRect a
 	window.draw(rendSpr);
 }
 
-int Map::getClosetTerritory(vector<Territory>& territories, float x, float y) {
+int Map::getClosetTerritory(vector<Territory*>& territories, float x, float y) {
 	int cId = -1, cDist = 10000000;
 	int xLoc = x*mapTxtr.getSize().x;
 	int yLoc = y*mapTxtr.getSize().y;
 
 	for (unsigned int i = 0; i<territories.size(); ++i) {
-		int tx = territories[i].GameData.x;
-		int ty = territories[i].GameData.y;
+		int tx = territories[i]->GameData.x;
+		int ty = territories[i]->GameData.y;
 		int t = (xLoc-tx)*(xLoc-tx)+(yLoc-ty)*(yLoc-ty);
 		if (t<cDist) {
 			cDist = t;
-			cId = territories[i].GameData.id;
+			cId = territories[i]->GameData.id;
 		}
 	}
 
-	return cId;
+	return (cDist<1600)?(cId):(-1);
 }

@@ -111,7 +111,7 @@ map<string,string> loadXML(string file) {
 	return ret;
 }
 
-void loadTerritoryCSV(vector<Territory>& territoryVec, string file) {
+void loadTerritoryCSV(vector<Territory*>& territoryVec, string file) {
 	ifstream input(file.c_str());
 	Territory ter;
 	string temp;
@@ -152,7 +152,7 @@ void loadTerritoryCSV(vector<Territory>& territoryVec, string file) {
 		if (temp.size()!=0)
 			ter.GameData.neighbors.push_back(stringToInt(temp));
 
-		territoryVec.push_back(ter);
+		territoryVec.push_back(new Territory(ter));
 	}
 }
 

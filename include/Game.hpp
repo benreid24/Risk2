@@ -22,8 +22,8 @@ enum BattleResult {
  */
 class Game {
 	TerritoryTree tTree;
-	std::vector<Territory> territoriesVec;
-	std::map<int,Territory> territories;
+	std::vector<Territory*> territoriesVec;
+	std::map<int,Territory*> territories;
 	std::map<int,Continent> continents;
 	std::vector<TerritoryCard> territoryCardDeck;
 	std::vector<WildCard> wildCardDeck;
@@ -73,6 +73,13 @@ class Game {
 	 */
 	bool handleWindowEvents();
 
+	/**
+	 * Creates player objects and initializes territory owners
+	 *
+	 * \param numP The number of players
+	 */
+	void assignTerritories(int numP);
+
 public:
 	/**
 	 * Primary constructor. Takes an XML file that specifies game properties (such as map image, data file, etc)
@@ -85,6 +92,11 @@ public:
 	 * Renders the map and current menu items to the window
 	 */
 	void render();
+
+	/**
+	 * Updates the window to display rendered content
+	 */
+	void display();
 
 	/**
 	 * Overall game loop that allows multiple games to played. Exit the program when it returns

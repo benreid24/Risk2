@@ -13,8 +13,8 @@ Game::Game(std::string gameFile) : tTree(&territories,&continents) {
 	TerritoryCard tCard;
 	tCard.type = TerritoryCard::A;
 	for (unsigned int i = 0; i<territoriesVec.size(); ++i) {
-		territories[territoriesVec[i].GameData.id] = territoriesVec[i];
-		tCard.id = territoriesVec[i].GameData.id;
+		territories[territoriesVec[i]->GameData.id] = territoriesVec[i];
+		tCard.id = territoriesVec[i]->GameData.id;
 		territoryCardDeck.push_back(tCard);
 		tCard.type = TerritoryCard::Type(int(tCard.type)+1);
 		if (tCard.type>TerritoryCard::C)
@@ -35,9 +35,9 @@ Game::Game(std::string gameFile) : tTree(&territories,&continents) {
     lobbyBgnd.setTexture(lobbyTxtr);
     startBgnd.setTexture(startTxtr);
     mainBgnd.setTexture(mainTxtr);
-    lobbyButtons.insert(make_pair("Lobby.UpButton",new Button(cfg["Risk2.Menu.Lobby.UpButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.UpX"]),stringToInt(cfg["Risk2.Menu.Lobby.UpDownY"])))));
-    lobbyButtons.insert(make_pair("Lobby.DownButton",new Button(cfg["Risk2.Menu.Lobby.DownButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.DownX"]),stringToInt(cfg["Risk2.Menu.Lobby.UpDownY"])))));
-    lobbyButtons.insert(make_pair("Lobby.PlayButton",new Button(cfg["Risk2.Menu.Lobby.PlayButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.PlayX"]),stringToInt(cfg["Risk2.Menu.Lobby.PlayY"])))));
+    lobbyButtons.insert(make_pair("UpButton",new Button(cfg["Risk2.Menu.Lobby.UpButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.UpX"]),stringToInt(cfg["Risk2.Menu.Lobby.UpDownY"])))));
+    lobbyButtons.insert(make_pair("DownButton",new Button(cfg["Risk2.Menu.Lobby.DownButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.DownX"]),stringToInt(cfg["Risk2.Menu.Lobby.UpDownY"])))));
+    lobbyButtons.insert(make_pair("PlayButton",new Button(cfg["Risk2.Menu.Lobby.PlayButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.PlayX"]),stringToInt(cfg["Risk2.Menu.Lobby.PlayY"])))));
 
 	VideoMode t = VideoMode::getDesktopMode();
 	t.height *= 0.75;
@@ -73,17 +73,44 @@ void Game::start() {
 bool Game::lobby() {
 	state = Lobby;
     sf::Text pCountTxt;
-    int pCount = 1;
+    int pCount = 2;
+    int fDelay = 0;
+
+    pCountTxt.setPosition(Vector2f(800,70));
+    pCountTxt.setFont(font);
+    pCountTxt.setCharacterSize(40);
+    pCountTxt.setColor(Color::Black);
+    pCountTxt.setString("2");
 
     while (window.isOpen()) {
 		if (!handleWindowEvents())
 			break;
 
+		if (fDelay>0)
+			fDelay--;
+
+		if (lobbyButtons["UpButton"]->isClicked(window) && pCount<6 && fDelay==0) {
+			pCount++;
+			pCountTxt.setString(intToString(pCount));
+			fDelay = 10;
+		}
+		if (lobbyButtons["DownButton"]->isClicked(window) && pCount>2 && fDelay==0) {
+			pCount--;
+			pCountTxt.setString(intToString(pCount));
+			fDelay = 10;
+		}
+		if (lobbyButtons["PlayButton"]->isClicked(window)) {
+			assignTerritories(pCount); //TODO - maybe just create players here (allow name setting, get network players, etc)
+			return false;
+		}
+
 		render();
+		window.draw(pCountTxt);
+		display();
 		sleep(milliseconds(30));
     }
 
-    return false;
+    return true;
 }
 
 bool Game::gameStart() {
@@ -95,6 +122,7 @@ bool Game::gameStart() {
 bool Game::mainGame() {
 	state = Main;
 	//TODO - go around and do player turns
+	cout << territoriesVec.size() << endl;
 
 	while (window.isOpen()) {
 		if (!handleWindowEvents())
@@ -103,19 +131,23 @@ bool Game::mainGame() {
 		if (Mouse::isButtonPressed(Mouse::Left)) {
 			Vector2f pos = Vector2f(Mouse::getPosition(window));
 			pos = window.mapPixelToCoords(Vector2i(pos));
-			int id = rMap->getClosetTerritory(territoriesVec,pos.x/1600,pos.y/1200);
-			cout << territories[id].GameData.name << endl;
+			int id = rMap->getClosetTerritory(territoriesVec,pos.x/1600,(pos.y-200)/1000);
+			if (id!=-1)
+				cout << territories[id]->GameData.name << endl;
+			else
+				cout << "Far\n";
 		}
 
 		render();
+		display();
 		sleep(milliseconds(30));
 	}
 
-	return false;
+	return true;
 }
 
 void Game::render() {
-	vector<Territory> empt;
+	vector<Territory*> empt;
 	window.clear();
 	switch (state) {
 	case Lobby:
@@ -140,7 +172,35 @@ void Game::render() {
 		cout << "Error! Game.state is invalid!\n";
 		break;
 	}
+}
+
+void Game::display() {
 	window.display();
+}
+
+void Game::assignTerritories(int numP) {
+	for (int i = 0; i<numP; ++i) {
+        players.push_back(Player(this,"Player",Faction(i+1)));
+	}
+
+	vector<int> terV;
+	for (int i = 1; i<=42; ++i)
+		terV.push_back(i);
+
+	int t = 42/numP;
+	for (int i = 0; i<numP; ++i) {
+		for (int j = 0; j<t; ++j) {
+            int k = getRandom(0,terV.size());
+            int id = terV[k];
+            territories[id]->OwnerData.armies = 1;
+            territories[id]->OwnerData.owner = players[i].faction;
+            terV.erase(terV.begin()+k);
+		}
+	}
+	for (unsigned int i = 0; i<terV.size(); ++i) {
+		territories[terV[i]]->OwnerData.owner = Faction::Neutral;
+		territories[terV[i]]->OwnerData.armies = 3;
+	}
 }
 
 BattleResult Game::attackTerritory(int attacker, int defender) {
@@ -150,9 +210,9 @@ BattleResult Game::attackTerritory(int attacker, int defender) {
 
 bool Game::moveArmies(int start, int dest, int amount) {
 	if (tTree.pathExists(start,dest)) { //this also ensures that both territories are the same faction
-		if (territories[start].OwnerData.armies-amount>=1) {
-			territories[start].OwnerData.armies -= amount;
-			territories[dest].OwnerData.armies += amount;
+		if (territories[start]->OwnerData.armies-amount>=1) {
+			territories[start]->OwnerData.armies -= amount;
+			territories[dest]->OwnerData.armies += amount;
 			return true;
 		}
 	}
@@ -178,5 +238,5 @@ void Game::returnCard(TerritoryCard t) {
 }
 
 void Game::placeArmies(int territory, int amount) {
-	territories[territory].OwnerData.armies += amount;
+	territories[territory]->OwnerData.armies += amount;
 }

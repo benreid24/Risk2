@@ -32,7 +32,7 @@ public:
      * \param territories The territory data to use while rendering
      * \param area The region of the window to render to. Everything will be scaled to fit
      */
-    void render(sf::RenderWindow& window, std::vector<Territory>& territories, sf::IntRect area);
+    void render(sf::RenderWindow& window, std::vector<Territory*>& territories, sf::IntRect area);
 
     /**
      * Returns the closet territory to the given position
@@ -40,9 +40,9 @@ public:
      * \param territories A reference to a vector containing all of the territories
      * \param x A normalized x coordinate in the range [0,1] of the position on the map to check
      * \param y A normalized y coordinate in the range [0,1] of the position on the map to check
-     * \return The id of the closest territory
+     * \return The id of the closest territory, or -1 if no territory is within 40 units
      */
-	int getClosetTerritory(std::vector<Territory>& territories, float x, float y);
+	int getClosetTerritory(std::vector<Territory*>& territories, float x, float y);
 };
 
 #endif // MAP_HPP

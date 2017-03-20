@@ -15,6 +15,8 @@ class Player {
 	std::vector<TerritoryCard> cards;
 	Faction faction;
 
+	friend class Game;
+
 public:
 	/**
 	 * Primary constructor, initializes basic internal data

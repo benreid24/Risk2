@@ -3,7 +3,7 @@ Id,Name,Continent,x,y,crop,industry,neighbor1,neighbor2,neighbor3,neighbor4,neig
 2,North West Territory,1,140,100,100,100,1,3,4,5,,
 3,Greenland,1,325,75,100,100,2,4,6,20,,
 4,Alberta,1,130,161,100,100,1,2,5,7,,
-5,Ontario,1,190,144,100,100,2,6,4,3,7,8
+5,Ontario,1,190,140,100,100,2,6,4,3,7,8
 6,Quebec,1,260,175,100,100,3,5,8,,,
 7,Western United States,1,132,243,100,100,4,5,8,9,,
 8,Eastern United States,1,236,227,100,100,7,4,5,9,,

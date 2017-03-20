@@ -21,7 +21,7 @@ extern std::map<std::string,std::string> loadXML(std::string file);
  * \param territoryVec A reference to a vector of Territory objects to populate
  * \param file The filename of the csv to load
  */
-extern void loadTerritoryCSV(std::vector<Territory>& territoryVec, std::string file);
+extern void loadTerritoryCSV(std::vector<Territory*>& territoryVec, std::string file);
 
 /**
  * Helper function to load continents from CSV
