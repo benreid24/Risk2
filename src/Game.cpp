@@ -35,6 +35,9 @@ Game::Game(std::string gameFile) : tTree(&territories,&continents) {
     lobbyBgnd.setTexture(lobbyTxtr);
     startBgnd.setTexture(startTxtr);
     mainBgnd.setTexture(mainTxtr);
+    lobbyButtons.insert(make_pair("Lobby.UpButton",new Button(cfg["Risk2.Menu.Lobby.UpButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.UpX"]),stringToInt(cfg["Risk2.Menu.Lobby.UpDownY"])))));
+    lobbyButtons.insert(make_pair("Lobby.DownButton",new Button(cfg["Risk2.Menu.Lobby.DownButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.DownX"]),stringToInt(cfg["Risk2.Menu.Lobby.UpDownY"])))));
+    lobbyButtons.insert(make_pair("Lobby.PlayButton",new Button(cfg["Risk2.Menu.Lobby.PlayButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.PlayX"]),stringToInt(cfg["Risk2.Menu.Lobby.PlayY"])))));
 
 	VideoMode t = VideoMode::getDesktopMode();
 	t.height *= 0.75;
@@ -42,6 +45,17 @@ Game::Game(std::string gameFile) : tTree(&territories,&continents) {
 	window.create(t, "Risk 2", Style::Close|Style::Titlebar|Style::Resize);
 	View view(FloatRect(0,0,1600,1200));
 	window.setView(view);
+}
+
+bool Game::handleWindowEvents() {
+	Event evt;
+	while (window.pollEvent(evt)) {
+		if (evt.type==Event::Closed) {
+			window.close();
+			return false;
+		}
+	}
+	return true;
 }
 
 void Game::start() {
@@ -58,7 +72,17 @@ void Game::start() {
 
 bool Game::lobby() {
 	state = Lobby;
-    //TODO - lobby menu
+    sf::Text pCountTxt;
+    int pCount = 1;
+
+    while (window.isOpen()) {
+		if (!handleWindowEvents())
+			break;
+
+		render();
+		sleep(milliseconds(30));
+    }
+
     return false;
 }
 
@@ -73,11 +97,8 @@ bool Game::mainGame() {
 	//TODO - go around and do player turns
 
 	while (window.isOpen()) {
-		Event evt;
-		while (window.pollEvent(evt)) {
-			if (evt.type==Event::Closed)
-				window.close();
-		}
+		if (!handleWindowEvents())
+				break;
 
 		if (Mouse::isButtonPressed(Mouse::Left)) {
 			Vector2f pos = Vector2f(Mouse::getPosition(window));
@@ -94,28 +115,31 @@ bool Game::mainGame() {
 }
 
 void Game::render() {
+	vector<Territory> empt;
 	window.clear();
 	switch (state) {
 	case Lobby:
 		window.draw(lobbyBgnd);
-		for (map<string,Button>::iterator i = lobbyButtons.begin(); i!=lobbyButtons.end(); ++i)
-			i->second.draw(window);
+		for (map<string,Button*>::iterator i = lobbyButtons.begin(); i!=lobbyButtons.end(); ++i)
+			i->second->draw(window);
+		rMap->render(window,empt,IntRect(0,200,1600,1000));
 		break;
 	case Start:
 		window.draw(startBgnd);
-		for (map<string,Button>::iterator i = startButtons.begin(); i!=startButtons.end(); ++i)
-			i->second.draw(window);
+		for (map<string,Button*>::iterator i = startButtons.begin(); i!=startButtons.end(); ++i)
+			i->second->draw(window);
+		rMap->render(window,territoriesVec,IntRect(0,200,1600,1000));
 		break;
 	case Main:
 		window.draw(mainBgnd);
-		for (map<string,Button>::iterator i = mainButtons.begin(); i!=mainButtons.end(); ++i)
-			i->second.draw(window);
+		for (map<string,Button*>::iterator i = mainButtons.begin(); i!=mainButtons.end(); ++i)
+			i->second->draw(window);
+		rMap->render(window,territoriesVec,IntRect(0,200,1600,1000));
 		break;
 	default:
 		cout << "Error! Game.state is invalid!\n";
 		break;
 	}
-	rMap->render(window,territoriesVec,IntRect(0,200,1600,1000));
 	window.display();
 }
 

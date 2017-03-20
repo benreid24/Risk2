@@ -30,7 +30,7 @@ class Game {
 	std::vector<Player> players;
 
 	sf::RenderWindow window;
-	std::map<std::string,Button> lobbyButtons, startButtons, mainButtons;
+	std::map<std::string,Button*> lobbyButtons, startButtons, mainButtons;
 	sf::Texture lobbyTxtr, startTxtr, mainTxtr;
 	sf::Sprite lobbyBgnd, startBgnd, mainBgnd;
 	Map* rMap;
@@ -65,6 +65,13 @@ class Game {
 	 * \return True if the program should exit, false otherwise
 	 */
 	bool mainGame();
+
+	/**
+	 * Handles window events and tells whether or not the game should exit
+	 *
+	 * \return True if the game should stay open, false otherwise
+	 */
+	bool handleWindowEvents();
 
 public:
 	/**

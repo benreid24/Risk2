@@ -21,6 +21,14 @@
 	<Menu>
 		<Lobby>
 			<Background>Resources/images/lobbyBgnd.png</Background>
+			<UpButton>Resources/images/lobbyUp.png</UpButton>
+			<DownButton>Resources/images/lobbyDown.png</DownButton>
+			<UpX>745</UpX>
+			<DownX>850</DownX>
+			<UpDownY>80</UpDownY>
+			<PlayButton>Resources/images/playButton.png</PlayButton>
+			<PlayX>1400</PlayX>
+			<PlayY>100</PlayY>
 		</Lobby>
 		<Start>
 			<Background>Resources/images/startBgnd.png</Background>
