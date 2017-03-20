@@ -25,12 +25,23 @@ Game::Game(std::string gameFile) : tTree(&territories,&continents) {
 	}
 	tTree.assignContinents();
 
+	//TODO - wild cards
+
 	font.loadFromFile(cfg["Risk2.Media.Font"]);
 	rMap = new Map(cfg["Risk2.Map.Image"],font);
+    lobbyTxtr.loadFromFile(cfg["Risk2.Menu.Lobby.Background"]);
+    startTxtr.loadFromFile(cfg["Risk2.Menu.Start.Background"]);
+    mainTxtr.loadFromFile(cfg["Risk2.Menu.Main.Background"]);
+    lobbyBgnd.setTexture(lobbyTxtr);
+    startBgnd.setTexture(startTxtr);
+    mainBgnd.setTexture(mainTxtr);
 
-	//TODO  - wild cards and players
-
-	window.create(VideoMode(1600,1200,32), "Risk 2", Style::Close|Style::Titlebar|Style::Resize);
+	VideoMode t = VideoMode::getDesktopMode();
+	t.height *= 0.75;
+	t.width = t.height*4/3;
+	window.create(t, "Risk 2", Style::Close|Style::Titlebar|Style::Resize);
+	View view(FloatRect(0,0,1600,1200));
+	window.setView(view);
 }
 
 void Game::start() {
@@ -46,16 +57,19 @@ void Game::start() {
 }
 
 bool Game::lobby() {
+	state = Lobby;
     //TODO - lobby menu
     return false;
 }
 
 bool Game::gameStart() {
+	state = Start;
 	//TODO - assign territories randomly and go around letting players place troops
 	return false;
 }
 
 bool Game::mainGame() {
+	state = Main;
 	//TODO - go around and do player turns
 
 	while (window.isOpen()) {
@@ -67,17 +81,42 @@ bool Game::mainGame() {
 
 		if (Mouse::isButtonPressed(Mouse::Left)) {
 			Vector2f pos = Vector2f(Mouse::getPosition(window));
+			pos = window.mapPixelToCoords(Vector2i(pos));
 			int id = rMap->getClosetTerritory(territoriesVec,pos.x/1600,pos.y/1200);
 			cout << territories[id].GameData.name << endl;
 		}
 
-		window.clear();
-		rMap->render(window,territoriesVec,IntRect(0,0,1600,1200));
-		window.display();
+		render();
 		sleep(milliseconds(30));
 	}
 
 	return false;
+}
+
+void Game::render() {
+	window.clear();
+	switch (state) {
+	case Lobby:
+		window.draw(lobbyBgnd);
+		for (map<string,Button>::iterator i = lobbyButtons.begin(); i!=lobbyButtons.end(); ++i)
+			i->second.draw(window);
+		break;
+	case Start:
+		window.draw(startBgnd);
+		for (map<string,Button>::iterator i = startButtons.begin(); i!=startButtons.end(); ++i)
+			i->second.draw(window);
+		break;
+	case Main:
+		window.draw(mainBgnd);
+		for (map<string,Button>::iterator i = mainButtons.begin(); i!=mainButtons.end(); ++i)
+			i->second.draw(window);
+		break;
+	default:
+		cout << "Error! Game.state is invalid!\n";
+		break;
+	}
+	rMap->render(window,territoriesVec,IntRect(0,200,1600,1000));
+	window.display();
 }
 
 BattleResult Game::attackTerritory(int attacker, int defender) {

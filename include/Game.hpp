@@ -6,6 +6,7 @@
 #include "Cards.hpp"
 #include "Player.hpp"
 #include "Map.hpp"
+#include "Button.hpp"
 
 /**
  * Basic enum to encode battle results
@@ -28,11 +29,21 @@ class Game {
 	std::vector<WildCard> wildCardDeck;
 	std::vector<Player> players;
 
+	sf::RenderWindow window;
+	std::map<std::string,Button> lobbyButtons, startButtons, mainButtons;
+	sf::Texture lobbyTxtr, startTxtr, mainTxtr;
+	sf::Sprite lobbyBgnd, startBgnd, mainBgnd;
 	Map* rMap;
 	sf::Font font;
 
-	sf::RenderWindow window;
-	//more GUI stuff
+	/**
+	 * Internal enum used for determining which menu to render
+	 */
+	enum State {
+		Lobby,
+		Start,
+		Main
+	}state;
 
 	/**
 	 * Function for the menu of adding players
@@ -62,6 +73,11 @@ public:
 	 * \param gameFile XML file containing game parameters
 	 */
 	Game(std::string gameFile);
+
+	/**
+	 * Renders the map and current menu items to the window
+	 */
+	void render();
 
 	/**
 	 * Overall game loop that allows multiple games to played. Exit the program when it returns

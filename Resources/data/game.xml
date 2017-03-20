@@ -18,4 +18,15 @@
 	<Media>
 		<Font>Resources/font.ttf</Font>
 	</Media>
+	<Menu>
+		<Lobby>
+			<Background>Resources/images/lobbyBgnd.png</Background>
+		</Lobby>
+		<Start>
+			<Background>Resources/images/startBgnd.png</Background>
+		</Start>
+		<Main>
+			<Background>Resources/images/mainBgnd.png</Background>
+		</Main>
+	</Menu>
 </Risk2>
