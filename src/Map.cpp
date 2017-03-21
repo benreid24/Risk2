@@ -12,13 +12,6 @@ Map::Map(string img, Font& f) : armyCircle(13) {
 	armyText.setCharacterSize(15);
 	target.create(mapTxtr.getSize().x,mapTxtr.getSize().y);
 	rendSpr.setTexture(target.getTexture());
-	colorMap[0] = Color::Red;
-	colorMap[1] = Color::Green;
-	colorMap[2] = Color::Blue;
-	colorMap[3] = Color::Yellow;
-	colorMap[4] = Color::White;
-	colorMap[5] = Color(255,165,0);
-	colorMap[6] = Color(180,180,180);
 }
 
 void Map::render(RenderWindow& window, vector<Territory*>& territories, IntRect area) {

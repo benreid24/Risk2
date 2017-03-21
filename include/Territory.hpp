@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <SFML/Graphics.hpp>
 
 /**
  * Basic enumeration to easily identify factions
@@ -16,6 +17,8 @@ enum Faction {
 	Orange = 5,
 	Neutral = 6
 };
+
+extern sf::Color colorMap[7];
 
 /**
  * Basic enumeration to easily identify labor type in territories

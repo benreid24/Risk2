@@ -4,6 +4,8 @@
 using namespace std;
 using namespace sf;
 
+Color colorMap[7] = {Color::Red,Color::Green,Color::Blue,Color::Yellow,Color::White,Color(255,165,0),Color(180,180,180)};
+
 Game::Game(std::string gameFile) : tTree(&territories,&continents) {
 	map<string,string> cfg = loadXML(gameFile);
 	vector<Continent> conts;
@@ -115,7 +117,26 @@ bool Game::lobby() {
 
 bool Game::gameStart() {
 	state = Start;
-	//TODO - assign territories randomly and go around letting players place troops
+	int armies = 20; //TODO - make initial army count dynamic
+
+	for (unsigned int i = 0; i<players.size(); ++i) {
+		playerRects[i].setFillColor(colorMap[int(players[i].faction)]);
+		playerRects[i].setSize(Vector2f(240,20));
+		playerRects[i].setPosition(1330,40+i*25);
+	}
+	arrowTxtr.loadFromFile("Resources/images/arrow.png");
+	arrow.setTexture(arrowTxtr);
+    arrow.setPosition(1275,40);
+
+    while (armies>0) {
+		for (unsigned int i = 0; i<players.size(); ++i) {
+			arrow.setPosition(1280,40+i*25);
+			if (players[i].assignArmies(1))
+				return true;
+		}
+		armies--;
+    }
+
 	return false;
 }
 
@@ -161,6 +182,10 @@ void Game::render() {
 		for (map<string,Button*>::iterator i = startButtons.begin(); i!=startButtons.end(); ++i)
 			i->second->draw(window);
 		rMap->render(window,territoriesVec,IntRect(0,200,1600,1000));
+		for (unsigned int i = 0; i<players.size(); ++i) {
+			window.draw(playerRects[i]);
+		}
+		window.draw(arrow);
 		break;
 	case Main:
 		window.draw(mainBgnd);
@@ -178,9 +203,15 @@ void Game::display() {
 	window.display();
 }
 
+int Game::getClosestTerritory() {
+	Vector2f pos = Vector2f(Mouse::getPosition(window));
+    pos = window.mapPixelToCoords(Vector2i(pos));
+	return rMap->getClosetTerritory(territoriesVec,pos.x/1600,(pos.y-200)/1000);
+}
+
 void Game::assignTerritories(int numP) {
 	for (int i = 0; i<numP; ++i) {
-        players.push_back(Player(this,"Player",Faction(i+1)));
+        players.push_back(Player(this,"Player",Faction(i)));
 	}
 
 	vector<int> terV;
@@ -237,6 +268,10 @@ void Game::returnCard(TerritoryCard t) {
 	territoryCardDeck.push_back(t);
 }
 
-void Game::placeArmies(int territory, int amount) {
-	territories[territory]->OwnerData.armies += amount;
+bool Game::placeArmies(Faction f, int territory, int amount) {
+	if (territories[territory]->OwnerData.owner==f) {
+		territories[territory]->OwnerData.armies += amount;
+		return true;
+	}
+	return false;
 }

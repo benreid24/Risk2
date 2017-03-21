@@ -14,7 +14,6 @@ class Map {
 	sf::Sprite mapImg;
 	sf::CircleShape armyCircle;
 	sf::Text armyText;
-	sf::Color colorMap[6];
 
 public:
 	/**

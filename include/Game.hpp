@@ -35,6 +35,9 @@ class Game {
 	sf::Sprite lobbyBgnd, startBgnd, mainBgnd;
 	Map* rMap;
 	sf::Font font;
+	sf::Texture arrowTxtr;
+	sf::Sprite arrow;
+	sf::RectangleShape playerRects[6];
 
 	/**
 	 * Internal enum used for determining which menu to render
@@ -65,13 +68,6 @@ class Game {
 	 * \return True if the program should exit, false otherwise
 	 */
 	bool mainGame();
-
-	/**
-	 * Handles window events and tells whether or not the game should exit
-	 *
-	 * \return True if the game should stay open, false otherwise
-	 */
-	bool handleWindowEvents();
 
 	/**
 	 * Creates player objects and initializes territory owners
@@ -145,10 +141,26 @@ public:
 	/**
 	 * Places armies on the given territory
 	 *
+	 * \param f The Faction of the armies to place
 	 * \param territory The id of the territory to place on
 	 * \param amount The amount of armies to place
+	 * \return True if the armies were placed, or false if the factions are not the same
 	 */
-	void placeArmies(int territory, int amount);
+	bool placeArmies(Faction f, int territory, int amount);
+
+	/**
+     * Returns the id of the current closest territory to the mouse
+     *
+     * \return The id of the closest territory, or -1 if none are nearby
+     */
+	int getClosestTerritory();
+
+	/**
+	 * Handles window events and tells whether or not the game should exit
+	 *
+	 * \return True if the game should stay open, false otherwise
+	 */
+	bool handleWindowEvents();
 };
 
 #endif // GAME_HPP
