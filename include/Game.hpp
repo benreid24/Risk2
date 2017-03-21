@@ -35,9 +35,11 @@ class Game {
 	sf::Sprite lobbyBgnd, startBgnd, mainBgnd;
 	Map* rMap;
 	sf::Font font;
+
 	sf::Texture arrowTxtr;
 	sf::Sprite arrow;
 	sf::RectangleShape playerRects[6];
+	sf::Text armyLeftText;
 
 	/**
 	 * Internal enum used for determining which menu to render

@@ -127,6 +127,11 @@ bool Game::gameStart() {
 	arrowTxtr.loadFromFile("Resources/images/arrow.png");
 	arrow.setTexture(arrowTxtr);
     arrow.setPosition(1275,40);
+    armyLeftText.setFont(font);
+    armyLeftText.setPosition(985,23);
+    armyLeftText.setCharacterSize(40);
+    armyLeftText.setColor(Color::Black);
+    armyLeftText.setString(intToString(armies));
 
     while (armies>0) {
 		for (unsigned int i = 0; i<players.size(); ++i) {
@@ -135,6 +140,7 @@ bool Game::gameStart() {
 				return true;
 		}
 		armies--;
+		armyLeftText.setString(intToString(armies));
     }
 
 	return false;
@@ -185,6 +191,7 @@ void Game::render() {
 		for (unsigned int i = 0; i<players.size(); ++i) {
 			window.draw(playerRects[i]);
 		}
+		window.draw(armyLeftText);
 		window.draw(arrow);
 		break;
 	case Main:
