@@ -1,10 +1,15 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+#include <map>
+#include <string>
 #include "Territory.hpp"
+#include "TerritoryTree.hpp"
 #include "Cards.hpp"
+#include "Button.hpp"
 
 class Game;
+class Map;
 
 /**
  * Base class for Player objects. Both local and remote players will derive from this
@@ -33,15 +38,17 @@ public:
 	 * \param amount The amount of armies the player can place
 	 * \return True if the game should close, false otherwise
 	 */
-	bool assignArmies(int amount); //TODO - figure out GUI stuff
+	bool assignArmies(int amount);
 
 	/**
 	 * This is a GUI function that allows the player to turn in, reinforce, attack and relocate armies
 	 *
-	 * \param armies The amount of armies available to the player to place (not counting if they decide to turn in)
+	 * \param rMap A pointer to the Map object
+	 * \param buttons A reference to the map of buttons available to the player
+	 * \param tTree A reference to a TerritoryTree
 	 * \return True if the game should close, false otherwise
 	 */
-	bool takeTurn(); //TODO - figure out how to indicate player resignation
+	bool takeTurn(Map* rMap, std::map<std::string,Button*>& buttons, TerritoryTree& tTree); //TODO - figure out how to indicate player resignation
 };
 
 #endif // PLAYER_HPP

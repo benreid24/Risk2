@@ -148,29 +148,111 @@ bool Game::gameStart() {
 
 bool Game::mainGame() {
 	state = Main;
-	//TODO - go around and do player turns
-	cout << territoriesVec.size() << endl;
+	turnPhase.setColor(Color::Yellow);
+	turnPhase.setCharacterSize(30);
+	turnPhase.setPosition(20,60);
+	turnPhase.setFont(font);
+	pName.setColor(Color::Black);
+	pName.setCharacterSize(22);
+	pName.setPosition(503,44);
+	pName.setFont(font);
+	pCrop.setColor(Color::Black);
+	pCrop.setCharacterSize(20);
+	pCrop.setPosition(503,88);
+	pCrop.setFont(font);
+	pMorale.setColor(Color::Black);
+	pMorale.setCharacterSize(20);
+	pMorale.setPosition(503,65);
+	pMorale.setFont(font);
+	pIndustry.setColor(Color::Black);
+	pIndustry.setCharacterSize(20);
+	pIndustry.setPosition(503,110);
+	pIndustry.setFont(font);
+	pTurnIn.setColor(Color::Black);
+	pTurnIn.setCharacterSize(20);
+	pTurnIn.setPosition(503,132);
+	pTurnIn.setFont(font);
+	tName.setFont(font);
+	tName.setColor(Color::Black);
+	tName.setCharacterSize(22);
+	tName.setPosition(881,46);
+	t2Name.setFont(font);
+	t2Name.setColor(Color::Blue);
+	t2Name.setCharacterSize(22);
+	t2Name.setPosition(1094,46);
+	tCrop.setColor(Color::Black);
+	tCrop.setCharacterSize(20);
+	tCrop.setPosition(881,73);
+	tCrop.setFont(font);
+	tIndustry.setColor(Color::Black);
+	tIndustry.setCharacterSize(20);
+	tIndustry.setPosition(881,97);
+	tIndustry.setFont(font);
+	pMessage.setColor(Color::Black);
+	pMessage.setPosition(32,130);
+	pMessage.setCharacterSize(24);
+	pMessage.setFont(font);
 
-	while (window.isOpen()) {
-		if (!handleWindowEvents())
-				break;
+	while (true) {
+		for (unsigned int i = 0; i<players.size(); ++i) {
+			//setup
+			pName.setString(players[i].name);
+			int crop = sumCropProduction(players[i].faction);
+			int industry = sumIndustrialProduction(players[i].faction);
+			int morale = crop+industry; //TODO - calculate morale
+			pCrop.setString(intToString(crop));
+			pIndustry.setString(intToString(industry));
+			pMorale.setString(intToString(morale));
+			pTurnIn.setString("Unavailable");
+			arrow.setPosition(1280,40+i*25);
+			selectTerritory(-1);
 
-		if (Mouse::isButtonPressed(Mouse::Left)) {
-			Vector2f pos = Vector2f(Mouse::getPosition(window));
-			pos = window.mapPixelToCoords(Vector2i(pos));
-			int id = rMap->getClosetTerritory(territoriesVec,pos.x/1600,(pos.y-200)/1000);
-			if (id!=-1)
-				cout << territories[id]->GameData.name << endl;
-			else
-				cout << "Far\n";
+			//reinforce
+			turnPhase.setString("Reinforce");
+			int armies = industry/200;
+			for (int j = 0; j<armies; ++j) {
+				pMessage.setString("Armies to place: "+intToString(armies-j));
+				if (players[i].assignArmies(1))
+					return true;
+				sleep(milliseconds(150));
+			}
+			pMessage.setString("");
+
+			//attack
+			turnPhase.setString("Attack");
+			if (players[i].takeTurn(rMap,mainButtons,tTree))
+				return true;
 		}
-
-		render();
-		display();
-		sleep(milliseconds(30));
 	}
 
-	return true;
+	return false;
+}
+
+void Game::selectTerritory(int id, bool t) {
+	if (!t) {
+		if (id==-1) {
+			tName.setString("");
+			tCrop.setString("");
+			tIndustry.setString("");
+			//mainButtons["LaborSlave"]->setHidden(true);
+			//mainButtons["LaborFree"]->setHidden(true);
+			butHighlight.setColor(Color::Transparent);
+		}
+		else {
+			tName.setString(territories[id]->GameData.name);
+			tCrop.setString(intToString(territories[id]->ConstData.baseCropProduction));
+			tIndustry.setString(intToString(territories[id]->ConstData.baseIndustrialProduction));
+			//mainButtons["LaborSlave"]->setHidden(false);
+			//mainButtons["LaborFree"]->setHidden(false);
+			butHighlight.setColor(Color::White);
+		}
+	}
+	else {
+		if (id==-1)
+			t2Name.setString("");
+		else
+			t2Name.setString(territories[id]->GameData.name);
+	}
 }
 
 void Game::render() {
@@ -198,7 +280,22 @@ void Game::render() {
 		window.draw(mainBgnd);
 		for (map<string,Button*>::iterator i = mainButtons.begin(); i!=mainButtons.end(); ++i)
 			i->second->draw(window);
+		for (unsigned int i = 0; i<players.size(); ++i) {
+			window.draw(playerRects[i]);
+		}
+		window.draw(arrow);
 		rMap->render(window,territoriesVec,IntRect(0,200,1600,1000));
+		window.draw(turnPhase);
+		window.draw(pMessage);
+		window.draw(pName);
+		window.draw(pMorale);
+		window.draw(pCrop);
+        window.draw(pIndustry);
+        window.draw(pTurnIn);
+        window.draw(tName);
+        window.draw(t2Name);
+        window.draw(tCrop);
+        window.draw(tIndustry);
 		break;
 	default:
 		cout << "Error! Game.state is invalid!\n";
@@ -208,6 +305,24 @@ void Game::render() {
 
 void Game::display() {
 	window.display();
+}
+
+int Game::sumCropProduction(Faction f) {
+	int r = 0;
+	for (unsigned int i = 0; i<territoriesVec.size(); ++i) {
+		if (territoriesVec[i]->OwnerData.owner==f)
+			r += territoriesVec[i]->ConstData.baseCropProduction;
+	}
+	return r;
+}
+
+int Game::sumIndustrialProduction(Faction f) {
+	int r = 0;
+	for (unsigned int i = 0; i<territoriesVec.size(); ++i) {
+		if (territoriesVec[i]->OwnerData.owner==f)
+			r += territoriesVec[i]->ConstData.baseIndustrialProduction;
+	}
+	return r;
 }
 
 int Game::getClosestTerritory() {

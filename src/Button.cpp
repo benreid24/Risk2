@@ -8,6 +8,7 @@ Button::Button(string imgFile, Vector2f pos) {
 	txtr.loadFromFile(imgFile);
 	spr.setTexture(txtr);
 	spr.setPosition(pos);
+	hidden = false;
 }
 
 bool Button::isClicked(RenderWindow& window) {
@@ -20,5 +21,10 @@ bool Button::isClicked(RenderWindow& window) {
 }
 
 void Button::draw(RenderWindow& window) {
-	window.draw(spr);
+	if (!hidden)
+		window.draw(spr);
+}
+
+void Button::setHidden(bool hide) {
+	hidden = hide;
 }

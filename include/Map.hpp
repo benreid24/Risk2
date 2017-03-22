@@ -1,6 +1,7 @@
 #ifndef MAP_HPP
 #define MAP_HPP
 
+#include <map>
 #include <SFML/Graphics.hpp>
 #include "Territory.hpp"
 
@@ -12,8 +13,9 @@ class Map {
 	sf::Sprite rendSpr;
 	sf::Texture mapTxtr;
 	sf::Sprite mapImg;
-	sf::CircleShape armyCircle;
+	sf::CircleShape armyCircle, selCircle;
 	sf::Text armyText;
+	std::map<int,sf::Color> selections;
 
 public:
 	/**
@@ -23,6 +25,26 @@ public:
 	 * \param font A reference to a Font object to use
 	 */
     Map(std::string img, sf::Font& font);
+
+    /**
+     * Sets a territory to be selected. All this does is add a ring around the army circle to visually indicate selection
+     *
+     * \param id The id of the territory to select
+     * \param c The color of the ring to put around the territory
+     */
+	void selectTerritory(int id, sf::Color c);
+
+	/**
+	 * Deselects the given territory
+	 *
+	 * \param id The id of the territory to deselect
+	 */
+	void deselectTerritory(int id);
+
+	/**
+	 * Clears all selections
+	 */
+    void clearSelections();
 
     /**
      * Renders the map and territory data to the given window

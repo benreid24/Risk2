@@ -14,6 +14,9 @@ void TerritoryTree::assignContinents() {
 }
 
 bool TerritoryTree::isNeighbor(int t1, int t2) {
+	if (t1==-1 || t2==-1)
+		return false;
+
 	map<int,Territory*>::iterator i = territories->find(t1);
 	if (i!=territories->end()) {
 		for (unsigned int j = 0; j<i->second->GameData.neighbors.size(); ++j) {
@@ -25,6 +28,9 @@ bool TerritoryTree::isNeighbor(int t1, int t2) {
 }
 
 bool TerritoryTree::pathExists(int start, int dest) {
+	if (start==-1 || dest==-1)
+		return false;
+
 	map<int,bool> visited;
 	Faction f = territories->at(start)->OwnerData.owner;
 
@@ -64,4 +70,8 @@ vector<int> TerritoryTree::getControlledContinents(Faction f) {
 	}
 
 	return ret;
+}
+
+Territory* TerritoryTree::getTerritory(int id) {
+	return territories->at(id);
 }

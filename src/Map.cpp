@@ -4,7 +4,7 @@
 using namespace std;
 using namespace sf;
 
-Map::Map(string img, Font& f) : armyCircle(13) {
+Map::Map(string img, Font& f) : armyCircle(13), selCircle(17) {
 	mapTxtr.loadFromFile(img);
 	mapImg.setTexture(mapTxtr);
 	armyText.setColor(Color::Black);
@@ -19,6 +19,11 @@ void Map::render(RenderWindow& window, vector<Territory*>& territories, IntRect 
 	target.draw(mapImg);
 	for (unsigned int i = 0; i<territories.size(); ++i) {
 		pos = Vector2f(territories[i]->GameData.x,territories[i]->GameData.y);
+		if (selections.find(territories[i]->GameData.id)!=selections.end()) {
+            selCircle.setPosition(pos+Vector2f(-4,-4));
+            selCircle.setFillColor(selections[territories[i]->GameData.id]);
+            target.draw(selCircle);
+		}
 		armyCircle.setPosition(pos);
 		armyCircle.setFillColor(colorMap[territories[i]->OwnerData.owner]);
 		target.draw(armyCircle);
@@ -48,4 +53,16 @@ int Map::getClosetTerritory(vector<Territory*>& territories, float x, float y) {
 	}
 
 	return (cDist<1600)?(cId):(-1);
+}
+
+void Map::selectTerritory(int id, Color c) {
+	selections[id] = c;
+}
+
+void Map::deselectTerritory(int id) {
+	selections.erase(id);
+}
+
+void Map::clearSelections() {
+	selections.clear();
 }

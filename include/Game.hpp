@@ -31,15 +31,20 @@ class Game {
 
 	sf::RenderWindow window;
 	std::map<std::string,Button*> lobbyButtons, startButtons, mainButtons;
-	sf::Texture lobbyTxtr, startTxtr, mainTxtr;
-	sf::Sprite lobbyBgnd, startBgnd, mainBgnd;
 	Map* rMap;
 	sf::Font font;
-
+	sf::Texture lobbyTxtr, startTxtr, mainTxtr;
+	sf::Sprite lobbyBgnd, startBgnd, mainBgnd;
 	sf::Texture arrowTxtr;
 	sf::Sprite arrow;
 	sf::RectangleShape playerRects[6];
 	sf::Text armyLeftText;
+
+	sf::Text turnPhase, pMessage;
+    sf::Text pName, pMorale, pCrop, pIndustry, pTurnIn;
+    sf::Text tName, tMorale, tCrop, tIndustry, t2Name;
+    sf::Texture butHighlightTxtr;
+    sf::Sprite butHighlight;
 
 	/**
 	 * Internal enum used for determining which menu to render
@@ -49,6 +54,22 @@ class Game {
 		Start,
 		Main
 	}state;
+
+	/**
+	 * Helper function to sum up the total crop production of a player's territories
+	 *
+	 * \param f The Faction of the Player to check
+	 * \return The total crop production
+	 */
+	int sumCropProduction(Faction f);
+
+	/**
+	 * Helper function to sum up the total industrial production of a player's territories
+	 *
+	 * \param f The Faction of the Player to check
+	 * \return The total industrial production
+	 */
+	int sumIndustrialProduction(Faction f);
 
 	/**
 	 * Function for the menu of adding players
@@ -156,6 +177,14 @@ public:
      * \return The id of the closest territory, or -1 if none are nearby
      */
 	int getClosestTerritory();
+
+	/**
+	 * Sets GUI field to reflect the current selected territory
+	 *
+	 * \param id The id of the territory to select. Pass -1 to clear fields
+	 * \param target Whether or not this territory is the target territory
+	 */
+	void selectTerritory(int id, bool target = false);
 
 	/**
 	 * Handles window events and tells whether or not the game should exit

@@ -44,6 +44,14 @@ public:
 	bool pathExists(int start, int dest);
 
 	/**
+	 * Helper function to provide access to territories
+	 *
+	 * \param id The id of the territory to retrieve
+	 * \return A pointer to the territory
+	 */
+	Territory* getTerritory(int id);
+
+	/**
 	 * Returns a list of continents owned by the given Faction
 	 *
 	 * \param f The Faction to check for

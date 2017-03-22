@@ -11,6 +11,7 @@ class Button {
 	sf::Texture txtr;
 	sf::Sprite spr;
 	sf::Image clickMap;
+	bool hidden;
 
 public:
 	/**
@@ -20,6 +21,13 @@ public:
 	 * \param pos The position of the button
 	 */
 	Button(std::string imgFile, sf::Vector2f pos);
+
+	/**
+	 * Sets whether or not the button is hidden
+	 *
+	 * \param hide Pass true to hide the button, false otherwise
+	 */
+	void setHidden(bool hide);
 
     /**
      * Tells whether or not the button is clicked
