@@ -29,6 +29,13 @@ public:
 	 */
 	void setHidden(bool hide);
 
+	/**
+	 * Returns the position of the button
+	 *
+	 * \return A Vector2f containing the position
+	 */
+	sf::Vector2f getPosition();
+
     /**
      * Tells whether or not the button is clicked
      *

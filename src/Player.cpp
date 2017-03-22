@@ -44,10 +44,8 @@ bool Player::takeTurn(Map* rMap, map<string,Button*>& buttons, TerritoryTree& tT
 				fWait = 10;
 				Color m = colorMap[tTree.getTerritory(id)->OwnerData.owner];
 				Color s(abs(128-m.r),abs(128-m.g),abs(128-m.b));
-				m.r = 255-m.r;
-				m.g = 255-m.g;
-				m.b = 255-m.b;
-				if (selectedTerritory==-1 || !tTree.isNeighbor(selectedTerritory,id) || id==targetTerritory || targetTerritory!=-1) {
+				m = Color(255-m.r,255-m.g,255-m.b);
+				if (selectedTerritory==-1 || !tTree.isNeighbor(selectedTerritory,id) || id==targetTerritory || (targetTerritory!=-1 && !tTree.isNeighbor(selectedTerritory,id)) || tTree.getTerritory(id)->OwnerData.owner==faction) {
 					if (selectedTerritory!=-1)
 						rMap->deselectTerritory(selectedTerritory);
 					selectedTerritory = id;
@@ -59,7 +57,11 @@ bool Player::takeTurn(Map* rMap, map<string,Button*>& buttons, TerritoryTree& tT
 					game->selectTerritory(id);
 					rMap->selectTerritory(id,m);
 				}
-				else if (targetTerritory==-1 && tTree.isNeighbor(selectedTerritory,id)) {
+				else if (tTree.isNeighbor(selectedTerritory,id) && tTree.getTerritory(selectedTerritory)->OwnerData.owner==faction && tTree.getTerritory(id)->OwnerData.owner!=faction) {
+                    if (targetTerritory!=-1) {
+						rMap->deselectTerritory(targetTerritory);
+						game->selectTerritory(-1,true);
+					}
                     targetTerritory = id;
                     game->selectTerritory(id,true);
                     rMap->selectTerritory(id,s);

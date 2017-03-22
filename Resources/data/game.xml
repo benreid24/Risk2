@@ -35,6 +35,15 @@
 		</Start>
 		<Main>
 			<Background>Resources/images/mainBgnd.png</Background>
+			<LaborFree>Resources/images/freeButton.png</LaborFree>
+			<LaborSlave>Resources/images/slaveButton.png</LaborSlave>
+			<LaborHighlight>Resources/images/buttonHighlight.png</LaborHighlight>
+			<LaborSlaveX>881</LaborSlaveX>
+			<LaborFreeX>965</LaborFreeX>
+			<LaborY>128</LaborY>
+			<Attack>Resources/images/attackButton.png</Attack>
+			<AttackX>1075</AttackX>
+			<AttackY>111</AttackY>
 		</Main>
 	</Menu>
 </Risk2>

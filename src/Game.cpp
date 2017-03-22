@@ -37,9 +37,14 @@ Game::Game(std::string gameFile) : tTree(&territories,&continents) {
     lobbyBgnd.setTexture(lobbyTxtr);
     startBgnd.setTexture(startTxtr);
     mainBgnd.setTexture(mainTxtr);
+    butHighlightTxtr.loadFromFile(cfg["Risk2.Menu.Main.LaborHighlight"]);
+    butHighlight.setTexture(butHighlightTxtr);
     lobbyButtons.insert(make_pair("UpButton",new Button(cfg["Risk2.Menu.Lobby.UpButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.UpX"]),stringToInt(cfg["Risk2.Menu.Lobby.UpDownY"])))));
     lobbyButtons.insert(make_pair("DownButton",new Button(cfg["Risk2.Menu.Lobby.DownButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.DownX"]),stringToInt(cfg["Risk2.Menu.Lobby.UpDownY"])))));
     lobbyButtons.insert(make_pair("PlayButton",new Button(cfg["Risk2.Menu.Lobby.PlayButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.PlayX"]),stringToInt(cfg["Risk2.Menu.Lobby.PlayY"])))));
+	mainButtons.insert(make_pair("Attack",new Button(cfg["Risk2.Menu.Main.Attack"],Vector2f(stringToInt(cfg["Risk2.Menu.Main.AttackX"]),stringToInt(cfg["Risk2.Menu.Main.AttackY"])))));
+	mainButtons.insert(make_pair("LaborSlave",new Button(cfg["Risk2.Menu.Main.LaborSlave"],Vector2f(stringToInt(cfg["Risk2.Menu.Main.LaborSlaveX"]),stringToInt(cfg["Risk2.Menu.Main.LaborY"])))));
+	mainButtons.insert(make_pair("LaborFree",new Button(cfg["Risk2.Menu.Main.LaborFree"],Vector2f(stringToInt(cfg["Risk2.Menu.Main.LaborFreeX"]),stringToInt(cfg["Risk2.Menu.Main.LaborY"])))));
 
 	VideoMode t = VideoMode::getDesktopMode();
 	t.height *= 0.75;
@@ -234,17 +239,21 @@ void Game::selectTerritory(int id, bool t) {
 			tName.setString("");
 			tCrop.setString("");
 			tIndustry.setString("");
-			//mainButtons["LaborSlave"]->setHidden(true);
-			//mainButtons["LaborFree"]->setHidden(true);
+			mainButtons["LaborSlave"]->setHidden(true);
+			mainButtons["LaborFree"]->setHidden(true);
 			butHighlight.setColor(Color::Transparent);
 		}
 		else {
 			tName.setString(territories[id]->GameData.name);
 			tCrop.setString(intToString(territories[id]->ConstData.baseCropProduction));
 			tIndustry.setString(intToString(territories[id]->ConstData.baseIndustrialProduction));
-			//mainButtons["LaborSlave"]->setHidden(false);
-			//mainButtons["LaborFree"]->setHidden(false);
+			mainButtons["LaborSlave"]->setHidden(false);
+			mainButtons["LaborFree"]->setHidden(false);
 			butHighlight.setColor(Color::White);
+			if (territories[id]->OwnerData.labor==LaborType::Slave)
+				butHighlight.setPosition(mainButtons["LaborSlave"]->getPosition()+Vector2f(-2,-2));
+			else
+				butHighlight.setPosition(mainButtons["LaborFree"]->getPosition()+Vector2f(-2,-2));
 		}
 	}
 	else {
@@ -278,6 +287,7 @@ void Game::render() {
 		break;
 	case Main:
 		window.draw(mainBgnd);
+		window.draw(butHighlight);
 		for (map<string,Button*>::iterator i = mainButtons.begin(); i!=mainButtons.end(); ++i)
 			i->second->draw(window);
 		for (unsigned int i = 0; i<players.size(); ++i) {

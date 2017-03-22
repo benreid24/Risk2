@@ -28,3 +28,7 @@ void Button::draw(RenderWindow& window) {
 void Button::setHidden(bool hide) {
 	hidden = hide;
 }
+
+Vector2f Button::getPosition() {
+	return spr.getPosition();
+}
