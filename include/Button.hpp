@@ -8,6 +8,7 @@
  * Simple button class to render buttons and tell if they're clicked
  */
 class Button {
+	sf::RenderWindow& target;
 	sf::Texture txtr;
 	sf::Sprite spr;
 	sf::Image clickMap;
@@ -17,10 +18,11 @@ public:
 	/**
 	 * Loads the image file and positions the button
 	 *
+	 * \param window The window that the button should be in
 	 * \param imgFile The image to use for the button
 	 * \param pos The position of the button
 	 */
-	Button(std::string imgFile, sf::Vector2f pos);
+	Button(sf::RenderWindow& window, std::string imgFile, sf::Vector2f pos);
 
 	/**
 	 * Sets whether or not the button is hidden
@@ -38,18 +40,14 @@ public:
 
     /**
      * Tells whether or not the button is clicked
-     *
-     * \param window A reference to the window that the button is in
      * \return True if the button is current clicked, false otherwise
      */
-	bool isClicked(sf::RenderWindow& window);
+	bool isClicked();
 
 	/**
-	 * Draws the button to the given window
-	 *
-	 * \param window A reference to the window to render to
+	 * Draws the button to the window
 	 */
-	void draw(sf::RenderWindow& window);
+	void draw();
 };
 
 #endif // BUTTON_HPP

@@ -14,7 +14,8 @@
 enum BattleResult {
 	Stalemate,
 	DefenderCaptured,
-	InvalidAttack
+	InvalidAttack,
+	GameClosed
 };
 
 /**
@@ -111,6 +112,13 @@ public:
 	 * Renders the map and current menu items to the window
 	 */
 	void render();
+
+	/**
+	 * Helper function to allow outside classes to add their own drawing to the window
+	 *
+	 * \param d The object to draw
+	 */
+	void draw(sf::Drawable& d);
 
 	/**
 	 * Updates the window to display rendered content

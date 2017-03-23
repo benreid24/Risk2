@@ -19,6 +19,8 @@
 		<Font>Resources/font.ttf</Font>
 	</Media>
 	<Menu>
+		<ArmyPrompt>Resources/images/cPrompt.png</ArmyPrompt>
+		<ConfirmButton>Resources/images/confirm.png</ConfirmButton>
 		<Lobby>
 			<Background>Resources/images/lobbyBgnd.png</Background>
 			<UpButton>Resources/images/lobbyUp.png</UpButton>
@@ -44,6 +46,9 @@
 			<Attack>Resources/images/attackButton.png</Attack>
 			<AttackX>1075</AttackX>
 			<AttackY>111</AttackY>
+			<DoneAttack>Resources/images/doneAttackButton.png</DoneAttack>
+			<DoneAttackX>40</DoneAttackX>
+			<DoneAttackY>125</DoneAttackY>
 		</Main>
 	</Menu>
 </Risk2>

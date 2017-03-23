@@ -39,12 +39,23 @@ Game::Game(std::string gameFile) : tTree(&territories,&continents) {
     mainBgnd.setTexture(mainTxtr);
     butHighlightTxtr.loadFromFile(cfg["Risk2.Menu.Main.LaborHighlight"]);
     butHighlight.setTexture(butHighlightTxtr);
-    lobbyButtons.insert(make_pair("UpButton",new Button(cfg["Risk2.Menu.Lobby.UpButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.UpX"]),stringToInt(cfg["Risk2.Menu.Lobby.UpDownY"])))));
-    lobbyButtons.insert(make_pair("DownButton",new Button(cfg["Risk2.Menu.Lobby.DownButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.DownX"]),stringToInt(cfg["Risk2.Menu.Lobby.UpDownY"])))));
-    lobbyButtons.insert(make_pair("PlayButton",new Button(cfg["Risk2.Menu.Lobby.PlayButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.PlayX"]),stringToInt(cfg["Risk2.Menu.Lobby.PlayY"])))));
-	mainButtons.insert(make_pair("Attack",new Button(cfg["Risk2.Menu.Main.Attack"],Vector2f(stringToInt(cfg["Risk2.Menu.Main.AttackX"]),stringToInt(cfg["Risk2.Menu.Main.AttackY"])))));
-	mainButtons.insert(make_pair("LaborSlave",new Button(cfg["Risk2.Menu.Main.LaborSlave"],Vector2f(stringToInt(cfg["Risk2.Menu.Main.LaborSlaveX"]),stringToInt(cfg["Risk2.Menu.Main.LaborY"])))));
-	mainButtons.insert(make_pair("LaborFree",new Button(cfg["Risk2.Menu.Main.LaborFree"],Vector2f(stringToInt(cfg["Risk2.Menu.Main.LaborFreeX"]),stringToInt(cfg["Risk2.Menu.Main.LaborY"])))));
+    lobbyButtons.insert(make_pair("UpButton",new Button(window,cfg["Risk2.Menu.Lobby.UpButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.UpX"]),stringToInt(cfg["Risk2.Menu.Lobby.UpDownY"])))));
+    lobbyButtons.insert(make_pair("DownButton",new Button(window,cfg["Risk2.Menu.Lobby.DownButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.DownX"]),stringToInt(cfg["Risk2.Menu.Lobby.UpDownY"])))));
+    lobbyButtons.insert(make_pair("PlayButton",new Button(window,cfg["Risk2.Menu.Lobby.PlayButton"],Vector2f(stringToInt(cfg["Risk2.Menu.Lobby.PlayX"]),stringToInt(cfg["Risk2.Menu.Lobby.PlayY"])))));
+	mainButtons.insert(make_pair("Attack",new Button(window,cfg["Risk2.Menu.Main.Attack"],Vector2f(stringToInt(cfg["Risk2.Menu.Main.AttackX"]),stringToInt(cfg["Risk2.Menu.Main.AttackY"])))));
+	mainButtons.insert(make_pair("LaborSlave",new Button(window,cfg["Risk2.Menu.Main.LaborSlave"],Vector2f(stringToInt(cfg["Risk2.Menu.Main.LaborSlaveX"]),stringToInt(cfg["Risk2.Menu.Main.LaborY"])))));
+	mainButtons.insert(make_pair("LaborFree",new Button(window,cfg["Risk2.Menu.Main.LaborFree"],Vector2f(stringToInt(cfg["Risk2.Menu.Main.LaborFreeX"]),stringToInt(cfg["Risk2.Menu.Main.LaborY"])))));
+	mainButtons.insert(make_pair("DoneAttack",new Button(window,cfg["Risk2.Menu.Main.DoneAttack"],Vector2f(stringToInt(cfg["Risk2.Menu.Main.DoneAttackX"]),stringToInt(cfg["Risk2.Menu.Main.DoneAttackY"])))));
+
+	Player::promptTxtr.loadFromFile(cfg["Risk2.Menu.ArmyPrompt"]);
+    Player::prompt.setTexture(Player::promptTxtr);
+    Player::prompt.setPosition(800-Player::promptTxtr.getSize().x/2,210);
+    Player::armyText.setFont(font);
+    Player::armyText.setPosition(800,240);
+    Player::armyText.setColor(Color::Black);
+    Player::upArrow = new Button(window,cfg["Risk2.Menu.Lobby.UpButton"],Vector2f(732,250));
+    Player::downArrow = new Button(window,cfg["Risk2.Menu.Lobby.DownButton"],Vector2f(847,250));
+    Player::done = new Button(window,cfg["Risk2.Menu.ConfirmButton"],Vector2f(753,280));
 
 	VideoMode t = VideoMode::getDesktopMode();
 	t.height *= 0.75;
@@ -96,17 +107,17 @@ bool Game::lobby() {
 		if (fDelay>0)
 			fDelay--;
 
-		if (lobbyButtons["UpButton"]->isClicked(window) && pCount<6 && fDelay==0) {
+		if (lobbyButtons["UpButton"]->isClicked() && pCount<6 && fDelay==0) {
 			pCount++;
 			pCountTxt.setString(intToString(pCount));
 			fDelay = 10;
 		}
-		if (lobbyButtons["DownButton"]->isClicked(window) && pCount>2 && fDelay==0) {
+		if (lobbyButtons["DownButton"]->isClicked() && pCount>2 && fDelay==0) {
 			pCount--;
 			pCountTxt.setString(intToString(pCount));
 			fDelay = 10;
 		}
-		if (lobbyButtons["PlayButton"]->isClicked(window)) {
+		if (lobbyButtons["PlayButton"]->isClicked()) {
 			assignTerritories(pCount); //TODO - maybe just create players here (allow name setting, get network players, etc)
 			return false;
 		}
@@ -197,6 +208,7 @@ bool Game::mainGame() {
 	pMessage.setPosition(32,130);
 	pMessage.setCharacterSize(24);
 	pMessage.setFont(font);
+	mainButtons["DoneAttack"]->setHidden(true);
 
 	while (true) {
 		for (unsigned int i = 0; i<players.size(); ++i) {
@@ -214,7 +226,7 @@ bool Game::mainGame() {
 
 			//reinforce
 			turnPhase.setString("Reinforce");
-			int armies = industry/200;
+			int armies = industry/10;
 			for (int j = 0; j<armies; ++j) {
 				pMessage.setString("Armies to place: "+intToString(armies-j));
 				if (players[i].assignArmies(1))
@@ -271,13 +283,13 @@ void Game::render() {
 	case Lobby:
 		window.draw(lobbyBgnd);
 		for (map<string,Button*>::iterator i = lobbyButtons.begin(); i!=lobbyButtons.end(); ++i)
-			i->second->draw(window);
+			i->second->draw();
 		rMap->render(window,empt,IntRect(0,200,1600,1000));
 		break;
 	case Start:
 		window.draw(startBgnd);
 		for (map<string,Button*>::iterator i = startButtons.begin(); i!=startButtons.end(); ++i)
-			i->second->draw(window);
+			i->second->draw();
 		rMap->render(window,territoriesVec,IntRect(0,200,1600,1000));
 		for (unsigned int i = 0; i<players.size(); ++i) {
 			window.draw(playerRects[i]);
@@ -289,7 +301,7 @@ void Game::render() {
 		window.draw(mainBgnd);
 		window.draw(butHighlight);
 		for (map<string,Button*>::iterator i = mainButtons.begin(); i!=mainButtons.end(); ++i)
-			i->second->draw(window);
+			i->second->draw();
 		for (unsigned int i = 0; i<players.size(); ++i) {
 			window.draw(playerRects[i]);
 		}
@@ -313,24 +325,30 @@ void Game::render() {
 	}
 }
 
+void Game::draw(Drawable& d) {
+	window.draw(d);
+}
+
 void Game::display() {
 	window.display();
 }
 
 int Game::sumCropProduction(Faction f) {
 	int r = 0;
+	int m[2] = {3,1};
 	for (unsigned int i = 0; i<territoriesVec.size(); ++i) {
 		if (territoriesVec[i]->OwnerData.owner==f)
-			r += territoriesVec[i]->ConstData.baseCropProduction;
+			r += territoriesVec[i]->ConstData.baseCropProduction*m[territoriesVec[i]->OwnerData.labor];
 	}
 	return r;
 }
 
 int Game::sumIndustrialProduction(Faction f) {
 	int r = 0;
+	int m[2] = {3,1};
 	for (unsigned int i = 0; i<territoriesVec.size(); ++i) {
 		if (territoriesVec[i]->OwnerData.owner==f)
-			r += territoriesVec[i]->ConstData.baseIndustrialProduction;
+			r += territoriesVec[i]->ConstData.baseIndustrialProduction*m[territoriesVec[i]->OwnerData.labor];
 	}
 	return r;
 }
@@ -367,7 +385,43 @@ void Game::assignTerritories(int numP) {
 }
 
 BattleResult Game::attackTerritory(int attacker, int defender) {
-	//TODO - battle
+	if (tTree.isNeighbor(attacker,defender) && territories[attacker]->OwnerData.owner!=territories[defender]->OwnerData.owner) {
+		int atkAmount = (territories[attacker]->OwnerData.armies>4)?(3):(territories[attacker]->OwnerData.armies-1);
+		int defAmount = (territories[defender]->OwnerData.armies>2)?(2):(territories[defender]->OwnerData.armies);
+		int atkDice[atkAmount], defDice[defAmount];
+		for (int i = 0; i<atkAmount; ++i)
+			atkDice[i] = getRandom(1,7); //[1,6]
+		for (int i = 0; i<defAmount; ++i)
+			defDice[i] = getRandom(1,7); //[1,6]
+        sort(atkDice,atkDice+atkAmount);
+        sort(defDice,defDice+defAmount);
+        int c = min(atkAmount,defAmount);
+        int aLoss = 0, dLoss = 0;
+        for (int i = 0; i<c; ++i) {
+			if (atkDice[i]>defDice[i])
+				aLoss++;
+			else
+				dLoss++;
+        }
+        territories[attacker]->OwnerData.armies -= aLoss;
+        territories[defender]->OwnerData.armies -= dLoss;
+        if (territories[defender]->OwnerData.armies==0) {
+			int a = 0;
+			for (unsigned int i = 0; i<players.size(); ++i) {
+				if (players[i].faction==territories[attacker]->OwnerData.owner) {
+					a = players[i].armiesToMove(1,territories[attacker]->OwnerData.armies-1);
+					if (a==-1)
+						return BattleResult::GameClosed;
+					break;
+				}
+			}
+            territories[attacker]->OwnerData.armies -= a;
+            territories[defender]->OwnerData.armies = a;
+            territories[defender]->OwnerData.owner = territories[attacker]->OwnerData.owner;
+            return BattleResult::DefenderCaptured;
+        }
+		return BattleResult::Stalemate;
+	}
 	return BattleResult::InvalidAttack;
 }
 

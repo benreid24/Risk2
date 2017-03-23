@@ -3,7 +3,7 @@
 using namespace std;
 using namespace sf;
 
-Button::Button(string imgFile, Vector2f pos) {
+Button::Button(RenderWindow& window, string imgFile, Vector2f pos) : target(window) {
 	clickMap.loadFromFile(imgFile);
 	txtr.loadFromFile(imgFile);
 	spr.setTexture(txtr);
@@ -11,18 +11,18 @@ Button::Button(string imgFile, Vector2f pos) {
 	hidden = false;
 }
 
-bool Button::isClicked(RenderWindow& window) {
-	Vector2f pos = Vector2f(Mouse::getPosition(window));
-	pos = window.mapPixelToCoords(Vector2i(pos));
+bool Button::isClicked() {
+	Vector2f pos = Vector2f(Mouse::getPosition(target));
+	pos = target.mapPixelToCoords(Vector2i(pos));
 	pos -= spr.getPosition();
 	if (pos.x<0 || pos.y<0 || pos.x>=clickMap.getSize().x || pos.y>=clickMap.getSize().y)
 		return false;
 	return (clickMap.getPixel(pos.x,pos.y)!=Color::Transparent && Mouse::isButtonPressed(Mouse::Left));
 }
 
-void Button::draw(RenderWindow& window) {
+void Button::draw() {
 	if (!hidden)
-		window.draw(spr);
+		target.draw(spr);
 }
 
 void Button::setHidden(bool hide) {

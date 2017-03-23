@@ -24,8 +24,8 @@ extern sf::Color colorMap[7];
  * Basic enumeration to easily identify labor type in territories
  */
 enum LaborType {
-	Slave,
-	Paid
+	Slave = 0,
+	Paid = 1
 };
 
 /**

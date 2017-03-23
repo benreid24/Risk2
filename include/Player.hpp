@@ -20,6 +20,11 @@ class Player {
 	std::vector<TerritoryCard> cards;
 	Faction faction;
 
+	static sf::Texture promptTxtr;
+	static sf::Sprite prompt;
+	static sf::Text armyText;
+	static Button *upArrow, *downArrow, *done;
+
 	friend class Game;
 
 public:
@@ -31,6 +36,15 @@ public:
 	 * \param color The Faction of the player
 	 */
 	Player(Game* g, std::string nm, Faction color);
+
+	/**
+	 * Helper GUI function that gets a number from the player with the prompt "Armies to move"
+	 *
+	 * \param mn The minimum amount that must be moved
+	 * \param mx The maximum amount that can be moved
+	 * \return The number the player chose to move, or -1 if the game should close
+	 */
+	int armiesToMove(int mn, int mx);
 
 	/**
 	 * This is a GUI function to assign initial armies in the beginning
@@ -49,6 +63,16 @@ public:
 	 * \return True if the game should close, false otherwise
 	 */
 	bool takeTurn(Map* rMap, std::map<std::string,Button*>& buttons, TerritoryTree& tTree); //TODO - figure out how to indicate player resignation
+
+	/**
+	 * This is a GUI function that allows the player to move armies around
+	 *
+	 * \param rMap A pointer to the Map object
+	 * \param buttons A reference to the map of buttons
+	 * \param tTree A reference to a TerritoryTree
+	 * \return True if the game should close, false otherwise
+	 */
+	bool reinforce(Map* rMap, std::map<std::string,Button*>& buttons, TerritoryTree& tTree);
 };
 
 #endif // PLAYER_HPP
