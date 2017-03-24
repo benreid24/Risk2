@@ -46,6 +46,8 @@ Game::Game(std::string gameFile) : tTree(&territories,&continents) {
 	mainButtons.insert(make_pair("LaborSlave",new Button(window,cfg["Risk2.Menu.Main.LaborSlave"],Vector2f(stringToInt(cfg["Risk2.Menu.Main.LaborSlaveX"]),stringToInt(cfg["Risk2.Menu.Main.LaborY"])))));
 	mainButtons.insert(make_pair("LaborFree",new Button(window,cfg["Risk2.Menu.Main.LaborFree"],Vector2f(stringToInt(cfg["Risk2.Menu.Main.LaborFreeX"]),stringToInt(cfg["Risk2.Menu.Main.LaborY"])))));
 	mainButtons.insert(make_pair("DoneAttack",new Button(window,cfg["Risk2.Menu.Main.DoneAttack"],Vector2f(stringToInt(cfg["Risk2.Menu.Main.DoneAttackX"]),stringToInt(cfg["Risk2.Menu.Main.DoneAttackY"])))));
+	mainButtons.insert(make_pair("Transfer",new Button(window,cfg["Risk2.Menu.Main.Transfer"],Vector2f(stringToInt(cfg["Risk2.Menu.Main.TransferX"]),stringToInt(cfg["Risk2.Menu.Main.TransferY"])))));
+	mainButtons.insert(make_pair("DoneTransfer",new Button(window,cfg["Risk2.Menu.Main.DoneTransfer"],Vector2f(stringToInt(cfg["Risk2.Menu.Main.DoneTransferX"]),stringToInt(cfg["Risk2.Menu.Main.DoneTransferY"])))));
 
 	Player::promptTxtr.loadFromFile(cfg["Risk2.Menu.ArmyPrompt"]);
     Player::prompt.setTexture(Player::promptTxtr);
@@ -209,6 +211,9 @@ bool Game::mainGame() {
 	pMessage.setCharacterSize(24);
 	pMessage.setFont(font);
 	mainButtons["DoneAttack"]->setHidden(true);
+	mainButtons["DoneTransfer"]->setHidden(true);
+	mainButtons["Transfer"]->setHidden(true);
+	mainButtons["Attack"]->setHidden(true);
 
 	while (true) {
 		for (unsigned int i = 0; i<players.size(); ++i) {
@@ -233,11 +238,18 @@ bool Game::mainGame() {
 					return true;
 				sleep(milliseconds(150));
 			}
+			sleep(milliseconds(250));
 			pMessage.setString("");
 
 			//attack
 			turnPhase.setString("Attack");
 			if (players[i].takeTurn(rMap,mainButtons,tTree))
+				return true;
+			sleep(milliseconds(250));
+
+			//transfer
+			turnPhase.setString("Transfer");
+			if (players[i].reinforce(rMap,mainButtons,tTree))
 				return true;
 		}
 	}

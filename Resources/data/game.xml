@@ -49,6 +49,12 @@
 			<DoneAttack>Resources/images/doneAttackButton.png</DoneAttack>
 			<DoneAttackX>40</DoneAttackX>
 			<DoneAttackY>125</DoneAttackY>
+			<DoneTransfer>Resources/images/doneTransferButton.png</DoneTransfer>
+			<DoneTransferX>40</DoneTransferX>
+			<DoneTransferY>125</DoneTransferY>
+			<Transfer>Resources/images/transferButton.png</Transfer>
+			<TransferX>1075</TransferX>
+			<TransferY>111</TransferY>
 		</Main>
 	</Menu>
 </Risk2>

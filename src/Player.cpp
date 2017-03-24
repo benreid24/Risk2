@@ -174,3 +174,96 @@ bool Player::takeTurn(Map* rMap, map<string,Button*>& buttons, TerritoryTree& tT
 
 	return true;
 }
+
+bool Player::reinforce(Map* rMap, map<string,Button*>& buttons, TerritoryTree& tTree) {
+	int selectedTerritory = -1;
+	int targetTerritory = -1;
+
+	int fWait = 0;
+	buttons["DoneTransfer"]->setHidden(false);
+	while (game->handleWindowEvents()) {
+		if (buttons["Transfer"]->isClicked() && selectedTerritory!=-1 && targetTerritory!=-1) {
+			//transfer
+			cout << "Transfer\n";
+			int t = armiesToMove(1,tTree.getTerritory(selectedTerritory)->OwnerData.armies-1);
+			if (game->moveArmies(selectedTerritory,targetTerritory,t)) {
+				if (selectedTerritory!=-1) {
+					game->selectTerritory(-1);
+					rMap->deselectTerritory(selectedTerritory);
+				}
+				if (targetTerritory!=-1) {
+					rMap->deselectTerritory(targetTerritory);
+					game->selectTerritory(-1,true);
+				}
+				buttons["DoneTransfer"]->setHidden(true);
+				buttons["Transfer"]->setHidden(true);
+				return false;
+			}
+		}
+		else if (buttons["DoneTransfer"]->isClicked()) {
+			if (selectedTerritory!=-1) {
+				game->selectTerritory(-1);
+				rMap->deselectTerritory(selectedTerritory);
+			}
+			if (targetTerritory!=-1) {
+				rMap->deselectTerritory(targetTerritory);
+				game->selectTerritory(-1,true);
+			}
+			buttons["DoneTransfer"]->setHidden(true);
+			buttons["Transfer"]->setHidden(true);
+			return false;
+		}
+		else if (Mouse::isButtonPressed(Mouse::Left) && fWait==0) {
+			int id = game->getClosestTerritory();
+			if (id!=-1) {
+				fWait = 10;
+				Color m = colorMap[tTree.getTerritory(id)->OwnerData.owner];
+				Color s(abs(128-m.r),abs(128-m.g),abs(128-m.b));
+				m = Color(255-m.r,255-m.g,255-m.b);
+				if ((selectedTerritory==-1 || !tTree.pathExists(selectedTerritory,id)) && tTree.getTerritory(id)->OwnerData.owner==faction && tTree.getTerritory(id)->OwnerData.armies>1) {
+					if (selectedTerritory!=-1)
+						rMap->deselectTerritory(selectedTerritory);
+					selectedTerritory = id;
+					if (targetTerritory!=-1) {
+						rMap->deselectTerritory(targetTerritory);
+						game->selectTerritory(-1,true);
+					}
+					targetTerritory = -1;
+					game->selectTerritory(id);
+					rMap->selectTerritory(id,m);
+				}
+				else if (tTree.pathExists(selectedTerritory,id) && tTree.getTerritory(selectedTerritory)->OwnerData.owner==faction) {
+                    if (targetTerritory!=-1) {
+						rMap->deselectTerritory(targetTerritory);
+						game->selectTerritory(-1,true);
+					}
+                    targetTerritory = id;
+                    game->selectTerritory(id,true);
+                    rMap->selectTerritory(id,s);
+				}
+			}
+            else {
+                if (selectedTerritory!=-1)
+					rMap->deselectTerritory(selectedTerritory);
+				if (targetTerritory!=-1)
+					rMap->deselectTerritory(targetTerritory);
+				game->selectTerritory(-1);
+				game->selectTerritory(-1,true);
+				selectedTerritory = targetTerritory = -1;
+            }
+		}
+
+		if (fWait>0)
+			fWait--;
+		if (selectedTerritory!=-1 && targetTerritory!=-1)
+			buttons["Transfer"]->setHidden(false);
+		else
+			buttons["Transfer"]->setHidden(true);
+
+		game->render();
+		game->display();
+		sleep(milliseconds(30));
+	}
+
+	return true;
+}
